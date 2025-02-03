@@ -11,7 +11,8 @@ contract AYCombinatorGovernanceTokenTest is Test {
 
     function setUp() public {
         vm.startPrank(admin);
-        token = new AYCombinatorGovernanceToken(minter);
+        token = new AYCombinatorGovernanceToken();
+        token.setMinter(minter);
         vm.stopPrank();
     }
 

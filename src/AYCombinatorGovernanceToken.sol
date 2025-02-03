@@ -11,11 +11,17 @@ contract AYCombinatorGovernanceToken is ERC20, AccessControl {
 
     /**
      * @dev Constructor for the AYCombinatorGovernanceToken contract
-     * @param investorDepositContract The address of the InvestorDepositContract
      */
-    constructor(address investorDepositContract) ERC20("AYCombinatorGovernanceToken", "AYG") {
+    constructor() ERC20("AYCombinatorGovernanceToken", "AYG") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, investorDepositContract);
+    }
+
+    /**
+     * @dev Sets the minter role for the InvestorDepositContract
+     * @param minterAddress The address to grant minter role to
+     */
+    function setMinter(address minterAddress) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _grantRole(MINTER_ROLE, minterAddress);
     }
 
     /**
