@@ -16,7 +16,7 @@ contract AYCombinatorGovernanceTokenTest is Test {
         vm.stopPrank();
     }
 
-    function test_mint() public {
+    function test_Mint() public {
         vm.startPrank(minter);
         token.mint(admin, 1000000000 * 10 ** token.decimals());
         vm.stopPrank();

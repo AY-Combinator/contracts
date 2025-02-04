@@ -38,7 +38,7 @@ contract InvestorDepositContract {
      * @dev Deposit USDC tokens into the contract
      * @param initialDepositor The address of the initial depositor, that is investor
      * @param amount The amount of USDC tokens to deposit
-     * @notice Only the depositManager can call this function (should be called by InvestorDepositContract)
+     * @notice Only the depositManager can call this function
      */
     function deposit(address initialDepositor, uint256 amount) external {
         require(msg.sender == depositManager, InvestorDepositContract_NotAllowed());
@@ -65,7 +65,7 @@ contract InvestorDepositContract {
      * @dev Invest AYG tokens into the contract
      * @param beneficiary The address of the beneficiary, that is startup
      * @param amount The amount of AYG tokens to invest
-     * @notice Only the fundManager can call this function (should be called by StartupDepositContract)
+     * @notice Only the fundManager can call this function (should be called by AI Agent which is also fundManager)
      */
     function invest(address beneficiary, uint256 amount) external {
         require(msg.sender == fundManager, InvestorDepositContract_NotAllowed());

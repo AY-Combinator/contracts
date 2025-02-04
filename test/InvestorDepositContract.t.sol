@@ -38,7 +38,7 @@ contract InvestorDepositContractTest is Test {
         vm.stopPrank();
     }
 
-    function test_deposit() public {
+    function test_Deposit() public {
         vm.startPrank(investor);
         USDC.approve(address(investorDepositContract), 1000000000000000000);
         vm.stopPrank();
@@ -71,7 +71,7 @@ contract InvestorDepositContractTest is Test {
         vm.stopPrank();
     }
 
-    function test_invest() public {
+    function test_Invest() public {
         vm.startPrank(investor);
         USDC.transfer(address(investorDepositContract), 1000000000000000000);
         vm.stopPrank();
