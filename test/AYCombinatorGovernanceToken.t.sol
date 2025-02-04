@@ -5,6 +5,8 @@ import "forge-std/Test.sol";
 import "../src/AYCombinatorGovernanceToken.sol";
 
 contract AYCombinatorGovernanceTokenTest is Test {
+    event AYCombinatorGovernanceToken_Minted(address indexed to, uint256 amount);
+
     AYCombinatorGovernanceToken public token;
     address public admin = makeAddr("admin");
     address public minter = makeAddr("minter");
@@ -18,6 +20,8 @@ contract AYCombinatorGovernanceTokenTest is Test {
 
     function test_Mint() public {
         vm.startPrank(minter);
+        vm.expectEmit(true, true, false, true);
+        emit AYCombinatorGovernanceToken_Minted(admin, 1000000000 * 10 ** token.decimals());
         token.mint(admin, 1000000000 * 10 ** token.decimals());
         vm.stopPrank();
         assertEq(token.balanceOf(admin), 1000000000 * 10 ** token.decimals());

@@ -14,6 +14,10 @@ contract MockStartupToken is ERC20 {
 }
 
 contract StartupDepositContractTest is Test {
+    event StartupDepositContract_TokenWhitelisted(address indexed token);
+    event StartupDepositContract_TokenDeposited(address indexed token, address indexed depositor, uint256 amount);
+    event StartupDepositContract_TokenWithdrawn(address indexed token, address indexed withdrawer, uint256 amount);
+
     StartupDepositContract public startupDepositContract;
     AYCombinatorGovernanceToken public AYG;
     MockStartupToken public startupOneToken;
@@ -39,6 +43,8 @@ contract StartupDepositContractTest is Test {
     }
 
     function test_TokenWhitelisting() public {
+        vm.expectEmit(true, false, false, true);
+        emit StartupDepositContract_TokenWhitelisted(address(startupOneToken));
         vm.startPrank(manager);
         startupDepositContract.setWhitelistedToken(address(startupOneToken));
         vm.stopPrank();
@@ -68,7 +74,11 @@ contract StartupDepositContractTest is Test {
         vm.startPrank(manager);
         startupDepositContract.setWhitelistedToken(address(startupOneToken));
         startupDepositContract.setWhitelistedToken(address(startupTwoToken));
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenDeposited(address(startupOneToken), startup1, startupOneAmount);
         startupDepositContract.depositToken(address(startupOneToken), startupOneAmount, startup1);
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenDeposited(address(startupTwoToken), startup2, startupTwoAmount);
         startupDepositContract.depositToken(address(startupTwoToken), startupTwoAmount, startup2);
         vm.stopPrank();
 
@@ -132,16 +142,32 @@ contract StartupDepositContractTest is Test {
 
         // Now we can withdraw the tokens
         vm.startPrank(investor1);
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupOneToken), investor1, 0.1 ether);
         startupDepositContract.withdrawToken(address(startupOneToken));
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupTwoToken), investor1, 1 ether);
         startupDepositContract.withdrawToken(address(startupTwoToken));
         vm.startPrank(investor2);
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupOneToken), investor2, 0.8 ether);
         startupDepositContract.withdrawToken(address(startupOneToken));
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupTwoToken), investor2, 8 ether);
         startupDepositContract.withdrawToken(address(startupTwoToken));
         vm.startPrank(investor3);
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupOneToken), investor3, 0.05345 ether);
         startupDepositContract.withdrawToken(address(startupOneToken));
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupTwoToken), investor3, 0.5345 ether);
         startupDepositContract.withdrawToken(address(startupTwoToken));
         vm.startPrank(investor4);
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupOneToken), investor4, 0.04655 ether);
         startupDepositContract.withdrawToken(address(startupOneToken));
+        vm.expectEmit(true, true, false, true);
+        emit StartupDepositContract_TokenWithdrawn(address(startupTwoToken), investor4, 0.4655 ether);
         startupDepositContract.withdrawToken(address(startupTwoToken));
         vm.stopPrank();
 

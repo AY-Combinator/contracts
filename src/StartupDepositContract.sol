@@ -14,6 +14,10 @@ contract StartupDepositContract {
     // @dev mapping to check if a token has been withdrawn by an investor
     mapping(address => mapping(address => bool)) public tokenToWithdrawer;
 
+    event StartupDepositContract_TokenWhitelisted(address indexed token);
+    event StartupDepositContract_TokenDeposited(address indexed token, address indexed depositor, uint256 amount);
+    event StartupDepositContract_TokenWithdrawn(address indexed token, address indexed withdrawer, uint256 amount);
+
     error StartupDepositContract_NotAllowed();
     error StartupDepositContract_NotWhitelistedToken();
     error StartupDepositContract_AllowanceTooLow();
@@ -36,6 +40,7 @@ contract StartupDepositContract {
      */
     function setWhitelistedToken(address token) external onlyManager {
         whitelistedTokens[token] = true;
+        emit StartupDepositContract_TokenWhitelisted(token);
     }
 
     /**
@@ -50,6 +55,7 @@ contract StartupDepositContract {
         require(IERC20(token).allowance(from, address(this)) >= amount, StartupDepositContract_AllowanceTooLow());
         IERC20(token).safeTransferFrom(from, address(this), amount);
         tokensReceived[token] += amount;
+        emit StartupDepositContract_TokenDeposited(token, from, amount);
     }
 
     /**
@@ -65,5 +71,6 @@ contract StartupDepositContract {
 
         IERC20(token).safeTransfer(msg.sender, amountToWithdraw);
         tokenToWithdrawer[token][msg.sender] = true;
+        emit StartupDepositContract_TokenWithdrawn(token, msg.sender, amountToWithdraw);
     }
 }

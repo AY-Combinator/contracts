@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 contract AYCombinatorGovernanceToken is ERC20, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+    event AYCombinatorGovernanceToken_Minted(address indexed to, uint256 amount);
+
     error AYCombinatorGovernanceToken_TransfersAreDisabled();
 
     /**
@@ -32,6 +34,7 @@ contract AYCombinatorGovernanceToken is ERC20, AccessControl {
      */
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
         _mint(to, amount);
+        emit AYCombinatorGovernanceToken_Minted(to, amount);
     }
 
     /**
